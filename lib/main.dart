@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './pages/login.dart';
+import './utils/login_animator.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.black,
         fontFamily: 'Nunito'
       ),
-      home: LoginPage(),
+      home: LoginAnimator(),
     );
   }
 }
