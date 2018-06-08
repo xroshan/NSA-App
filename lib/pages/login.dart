@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import '../utils/focus.dart';
 import 'dart:ui' as ui;
 import 'package:meta/meta.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import './chat.dart';
+import 'dart:async';
 
 class LoginPage extends StatefulWidget {
   LoginPage({@required AnimationController controller})
@@ -19,6 +23,26 @@ class _LoginPageState extends State<LoginPage> {
   static FocusNode _focusNodePassword = FocusNode();
   static final _emailController = TextEditingController();
   static final _passwordController = TextEditingController();
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn googleSignIn = GoogleSignIn();
+
+  Future<FirebaseUser> _signIn() async {
+    GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
+    GoogleSignInAuthentication gSA = await googleSignInAccount.authentication;
+
+    FirebaseUser user = await _auth.signInWithGoogle(
+        idToken: gSA.idToken, accessToken: gSA.accessToken);
+
+    print('User Name : ${user.displayName}');
+
+    return user;
+  }
+
+  void _signOut() {
+    googleSignIn.signOut();
+    print('Sign out');
+  }
 
   final email = EnsureVisibleWhenFocused(
     focusNode: _focusNodeEmail,
@@ -79,39 +103,44 @@ class _LoginPageState extends State<LoginPage> {
     ),
   );
 
-  final loginBtn = RaisedButton(
-    elevation: 20.0,
-    shape: StadiumBorder(side: BorderSide(color: Colors.white70, width: 1.5)),
-    color: Colors.blueAccent,
-    child: Container(
-      height: 50.0,
-      width: 140.0,
-      child: Center(
-        child: Text(
-          'LOGIN',
-          style: TextStyle(color: Colors.white, fontSize: 18.0),
+  Widget _buildLoginBtn(BuildContext context, Widget child) {
+    return RaisedButton(
+        elevation: 20.0,
+        shape:
+            StadiumBorder(side: BorderSide(color: Colors.white70, width: 1.5)),
+        color: Colors.blueAccent,
+        child: Container(
+          height: 50.0,
+          width: 140.0,
+          child: Center(
+            child: Text(
+              'LOGIN',
+              style: TextStyle(color: Colors.white, fontSize: 18.0),
+            ),
+          ),
         ),
-      ),
-    ),
-    onPressed: () => print('Login was pressed!'),
-  );
+        onPressed: () => _signIn().then(
+          (FirebaseUser user) => print(user)));
+  }
 
-  final registerBtn = RaisedButton(
-    elevation: 8.0,
-    shape: StadiumBorder(side: BorderSide(color: Colors.white70, width: 1.5)),
-    color: Colors.redAccent,
-    child: Container(
-      height: 50.0,
-      width: 140.0,
-      child: Center(
-        child: Text(
-          'REGISTER',
-          style: TextStyle(color: Colors.white, fontSize: 18.0),
+  Widget _buildLoginBtn2(BuildContext context, Widget child) {
+    return RaisedButton(
+      elevation: 8.0,
+      shape: StadiumBorder(side: BorderSide(color: Colors.white70, width: 1.5)),
+      color: Colors.redAccent,
+      child: Container(
+        height: 50.0,
+        width: 140.0,
+        child: Center(
+          child: Text(
+            'REGISTER',
+            style: TextStyle(color: Colors.white, fontSize: 18.0),
+          ),
         ),
       ),
-    ),
-    onPressed: () => print('Register was pressed!'),
-  );
+      onPressed: () => _signOut(),
+    );
+  }
 
   Widget _buildAnimation(BuildContext context, Widget child) {
     return Stack(
@@ -177,11 +206,11 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               height: 50.0,
             ),
-            loginBtn,
+            _buildLoginBtn(context, child),
             SizedBox(
               height: 15.0,
             ),
-            registerBtn
+            _buildLoginBtn2(context, child)
           ],
         ),
       ),
@@ -220,14 +249,7 @@ class LoginEnterAnimation {
           ),
         ),
         opacity = new Tween(begin: 0.0, end: 1.0).animate(
-          CurvedAnimation(
-            parent: controller,
-            curve: Interval(
-              0.500,
-              0.500
-            )
-          )
-        );
+            CurvedAnimation(parent: controller, curve: Interval(0.500, 0.500)));
 
   final AnimationController controller;
 
