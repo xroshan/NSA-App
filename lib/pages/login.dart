@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import '../utils/focus.dart';
 import 'dart:ui' as ui;
 import 'package:meta/meta.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import './chat.dart';
 import 'dart:async';
+
+import './chat.dart';
+//import '../utils/focus.dart';       Uncomment if you want to use email and password for login
+
 
 class LoginPage extends StatefulWidget {
   LoginPage({@required AnimationController controller})
@@ -19,10 +21,13 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  /*
   static FocusNode _focusNodeEmail = FocusNode();
   static FocusNode _focusNodePassword = FocusNode();
   static final _emailController = TextEditingController();
   static final _passwordController = TextEditingController();
+  */
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
@@ -44,6 +49,19 @@ class _LoginPageState extends State<LoginPage> {
     print('Sign out');
   }
 
+  final logo = Container(
+    height: 200.0,
+    width: 200.0,
+    decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(width: 3.0, color: Colors.black38)),
+    padding: EdgeInsets.all(3.0),
+    child: ClipOval(
+      child: Image.asset('assets/nsa_logo.jpg'),
+    ),
+  );
+
+/*
   final email = EnsureVisibleWhenFocused(
     focusNode: _focusNodeEmail,
     child: TextFormField(
@@ -70,18 +88,6 @@ class _LoginPageState extends State<LoginPage> {
     ),
   );
 
-  final logo = Container(
-    height: 200.0,
-    width: 200.0,
-    decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(width: 3.0, color: Colors.black38)),
-    padding: EdgeInsets.all(3.0),
-    child: ClipOval(
-      child: Image.asset('assets/nsa_logo.jpg'),
-    ),
-  );
-
   final password = EnsureVisibleWhenFocused(
     focusNode: _focusNodePassword,
     child: TextFormField(
@@ -103,7 +109,9 @@ class _LoginPageState extends State<LoginPage> {
     ),
   );
 
-  Widget _buildLoginBtn(BuildContext context, Widget child) {
+  */
+
+  Widget _buildLoginWithGoogle(BuildContext context, Widget child) {
     return RaisedButton(
         elevation: 20.0,
         shape:
@@ -111,29 +119,31 @@ class _LoginPageState extends State<LoginPage> {
         color: Colors.blueAccent,
         child: Container(
           height: 50.0,
-          width: 140.0,
+          width: 250.0,
           child: Center(
             child: Text(
-              'LOGIN',
+              'LOGIN WITH GOOGLE',
               style: TextStyle(color: Colors.white, fontSize: 18.0),
             ),
           ),
         ),
-        onPressed: () => _signIn().then(
-          (FirebaseUser user) => print(user)));
+        onPressed: () {
+          _signIn().then((FirebaseUser user) => Navigator.push(
+              context, MaterialPageRoute(builder: (context) => ChatPage())));
+        });
   }
 
-  Widget _buildLoginBtn2(BuildContext context, Widget child) {
+  Widget _buildLoginWithFacebook(BuildContext context, Widget child) {
     return RaisedButton(
       elevation: 8.0,
       shape: StadiumBorder(side: BorderSide(color: Colors.white70, width: 1.5)),
       color: Colors.redAccent,
       child: Container(
         height: 50.0,
-        width: 140.0,
+        width: 250.0,
         child: Center(
           child: Text(
-            'REGISTER',
+            'LOGIN WITH FACEBOOK',
             style: TextStyle(color: Colors.white, fontSize: 18.0),
           ),
         ),
@@ -196,21 +206,13 @@ class _LoginPageState extends State<LoginPage> {
               child: logo,
             ),
             SizedBox(
-              height: 90.0,
+              height: 150.0,
             ),
-            email,
+            _buildLoginWithGoogle(context, child),
             SizedBox(
-              height: 15.0,
+              height: 40.0,
             ),
-            password,
-            SizedBox(
-              height: 50.0,
-            ),
-            _buildLoginBtn(context, child),
-            SizedBox(
-              height: 15.0,
-            ),
-            _buildLoginBtn2(context, child)
+            _buildLoginWithFacebook(context, child)
           ],
         ),
       ),
