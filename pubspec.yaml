@@ -10,6 +10,11 @@ dependencies:
   cupertino_icons: ^0.1.2
   firebase_auth:
   google_sign_in:
+  cloud_firestore:
+  firebase_analytics:
+  firebase_database:
+  firebase_storage:
+  image_picker:
 
 dev_dependencies:
   flutter_test:

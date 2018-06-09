@@ -8,7 +8,6 @@ import 'dart:async';
 import './chat.dart';
 //import '../utils/focus.dart';       Uncomment if you want to use email and password for login
 
-
 class LoginPage extends StatefulWidget {
   LoginPage({@required AnimationController controller})
       : animation = LoginEnterAnimation(controller);
@@ -32,7 +31,12 @@ class _LoginPageState extends State<LoginPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
-  Future<FirebaseUser> _signIn() async {
+  bool _isAuthenticating = false;
+
+  Future<Null> _signIn() async {
+    setState(() {
+      _isAuthenticating = true;
+    });
     GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
     GoogleSignInAuthentication gSA = await googleSignInAccount.authentication;
 
@@ -41,7 +45,37 @@ class _LoginPageState extends State<LoginPage> {
 
     print('User Name : ${user.displayName}');
 
-    return user;
+    setState(() {
+      _isAuthenticating = false;
+    });
+
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => ChatPage(googleSignIn, _auth)));
+  }
+
+  Future<Null> _onTimeout() {
+    setState(() {
+      _isAuthenticating = false;
+    });
+    AlertDialog _dialog = AlertDialog(
+      content: Text(
+        'Check your network connectivity',
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 20.0),
+      ),
+      actions: <Widget>[
+        FlatButton(
+          child: Text(
+            'Ok',
+            style: TextStyle(fontSize: 17.0),
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ],
+    );
+    showDialog(context: context, child: _dialog);
+    print('failed');
+    return null;
   }
 
   void _signOut() {
@@ -128,8 +162,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
         onPressed: () {
-          _signIn().then((FirebaseUser user) => Navigator.push(
-              context, MaterialPageRoute(builder: (context) => ChatPage())));
+          _signIn().timeout(Duration(seconds: 25), onTimeout: _onTimeout);
         });
   }
 
@@ -186,6 +219,17 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ))),
+        _isAuthenticating
+            ? Center(
+                child: Container(
+                color: Colors.black54,
+                width: double.infinity,
+                height: double.infinity,
+                child: new Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: new Center(child: new CircularProgressIndicator())),
+              ))
+            : new Container()
       ],
     );
   }
