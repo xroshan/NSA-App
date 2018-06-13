@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:async';
 
-import './chat.dart';
+import 'navigator.dart';
 //import '../utils/focus.dart';       Uncomment if you want to use email and password for login
 
 class LoginPage extends StatefulWidget {
@@ -49,8 +49,8 @@ class _LoginPageState extends State<LoginPage> {
       _isAuthenticating = false;
     });
 
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => ChatPage(googleSignIn, _auth)));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => NavigatorPage()));
   }
 
   Future<Null> _onTimeout() {

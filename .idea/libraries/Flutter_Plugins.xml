@@ -3,6 +3,12 @@
     <CLASSES>
       <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth-0.5.11" />
       <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in-3.0.4" />
+      <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core-0.2.4" />
+      <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/image_picker-0.4.4" />
+      <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_database-1.0.1" />
+      <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_storage-0.3.7" />
+      <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-1.0.1" />
+      <root url="file://C:/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-0.7.3" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

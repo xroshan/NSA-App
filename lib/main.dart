@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import './utils/login_animator.dart';
-import './pages/chat.dart';
+import './pages/navigator.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,7 +11,8 @@ class MyApp extends StatelessWidget {
       title: 'NSALogin',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primaryColor: Colors.blueAccent, fontFamily: 'Nunito'),
-      home: LoginAnimator(),
+      home: NavigatorPage(),
+     // home: LoginAnimator(),
     );
   }
 }
