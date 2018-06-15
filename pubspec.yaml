@@ -15,6 +15,7 @@ dependencies:
   firebase_database:
   firebase_storage:
   image_picker:
+  flutter_staggered_grid_view: "^0.2.1"
 
 dev_dependencies:
   flutter_test:
@@ -37,6 +38,7 @@ flutter:
   - assets/nsa_logo.jpg
   - assets/login.png
   - assets/login2.webp
+  - assets/dummy/mars.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

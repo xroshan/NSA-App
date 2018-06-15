@@ -7,8 +7,9 @@ class LoginAnimator extends StatefulWidget {
 }
 
 class _LoginAnimatorState extends State<LoginAnimator>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   AnimationController _controller;
+  AnimationController _buttonController;
 
   @override
   void initState() {
@@ -16,18 +17,25 @@ class _LoginAnimatorState extends State<LoginAnimator>
     _controller = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 1500));
     _controller.forward();
+    _buttonController = AnimationController(
+      vsync: this, duration: Duration(
+        milliseconds: 3000
+      )
+    );
   }
 
   @override
   void dispose() {
     super.dispose();
     _controller.dispose();
+    _buttonController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return LoginPage(
-      controller: _controller,
+      enterController: _controller,
+      buttonController: _buttonController,
     );
   }
 }

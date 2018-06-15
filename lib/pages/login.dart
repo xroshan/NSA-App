@@ -9,16 +9,21 @@ import 'navigator.dart';
 //import '../utils/focus.dart';       Uncomment if you want to use email and password for login
 
 class LoginPage extends StatefulWidget {
-  LoginPage({@required AnimationController controller})
-      : animation = LoginEnterAnimation(controller);
+  LoginPage(
+      {@required AnimationController enterController,
+      AnimationController buttonController})
+      : enterAnimation = LoginEnterAnimation(enterController),
+        buttonAnimation = ButtonAnimation(buttonController);
 
-  final LoginEnterAnimation animation;
+  final LoginEnterAnimation enterAnimation;
+  final ButtonAnimation buttonAnimation;
 
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+  var animationStatus = 0;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   /*
@@ -31,12 +36,9 @@ class _LoginPageState extends State<LoginPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
-  bool _isAuthenticating = false;
-
   Future<Null> _signIn() async {
-    setState(() {
-      _isAuthenticating = true;
-    });
+    widget.buttonAnimation.controller.forward();
+
     GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
     GoogleSignInAuthentication gSA = await googleSignInAccount.authentication;
 
@@ -45,18 +47,13 @@ class _LoginPageState extends State<LoginPage> {
 
     print('User Name : ${user.displayName}');
 
-    setState(() {
-      _isAuthenticating = false;
-    });
-
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => NavigatorPage()));
   }
 
-  Future<Null> _onTimeout() {
-    setState(() {
-      _isAuthenticating = false;
-    });
+  Future<Null> _onTimeout() async {
+    widget.buttonAnimation.controller.reverse();
+
     AlertDialog _dialog = AlertDialog(
       content: Text(
         'Check your network connectivity',
@@ -74,7 +71,6 @@ class _LoginPageState extends State<LoginPage> {
       ],
     );
     showDialog(context: context, child: _dialog);
-    print('failed');
     return null;
   }
 
@@ -145,43 +141,45 @@ class _LoginPageState extends State<LoginPage> {
 
   */
 
-  Widget _buildLoginWithGoogle(BuildContext context, Widget child) {
-    return RaisedButton(
-        elevation: 20.0,
-        shape:
-            StadiumBorder(side: BorderSide(color: Colors.white70, width: 1.5)),
-        color: Colors.blueAccent,
-        child: Container(
-          height: 50.0,
-          width: 250.0,
-          child: Center(
-            child: Text(
-              'LOGIN WITH GOOGLE',
-              style: TextStyle(color: Colors.white, fontSize: 18.0),
-            ),
-          ),
-        ),
-        onPressed: () {
-          _signIn().timeout(Duration(seconds: 25), onTimeout: _onTimeout);
-        });
+  Widget _buildButton(BuildContext context, Widget child) {
+    return AnimatedBuilder(
+      animation: widget.buttonAnimation.controller,
+      builder: _buildButtonAnimation,
+    );
   }
 
-  Widget _buildLoginWithFacebook(BuildContext context, Widget child) {
-    return RaisedButton(
-      elevation: 8.0,
-      shape: StadiumBorder(side: BorderSide(color: Colors.white70, width: 1.5)),
-      color: Colors.redAccent,
-      child: Container(
-        height: 50.0,
-        width: 250.0,
-        child: Center(
-          child: Text(
-            'LOGIN WITH FACEBOOK',
-            style: TextStyle(color: Colors.white, fontSize: 18.0),
-          ),
-        ),
-      ),
-      onPressed: () => _signOut(),
+  Widget _buildButtonAnimation(BuildContext context, Widget child) {
+    return new Padding(
+      padding: widget.buttonAnimation.containerCircleAnimation.value,
+      child: new InkWell(
+          onTap: () {
+            _signIn().timeout(Duration(seconds: 25), onTimeout: _onTimeout);
+          },
+          child: new Hero(
+              tag: "fade",
+              child: Container(
+                  width: widget.buttonAnimation.buttonSqueezeanimation.value,
+                  height: 55.0,
+                  alignment: FractionalOffset.center,
+                  decoration: new BoxDecoration(
+                    border: Border.all(color: Colors.white, width: 1.5),
+                    color: Colors.blueAccent,
+                    borderRadius: BorderRadius.all(const Radius.circular(30.0)),
+                  ),
+                  child: widget.buttonAnimation.buttonSqueezeanimation.value >
+                          210.0
+                      ? Text(
+                          'LOGIN WITH GOOGLE',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.w700),
+                        )
+                      : new CircularProgressIndicator(
+                          strokeWidth: 2.5,
+                          valueColor:
+                              new AlwaysStoppedAnimation<Color>(Colors.white),
+                        )))),
     );
   }
 
@@ -199,8 +197,8 @@ class _LoginPageState extends State<LoginPage> {
         ),
         BackdropFilter(
           filter: ui.ImageFilter.blur(
-            sigmaX: widget.animation.backdropBlur.value,
-            sigmaY: widget.animation.backdropBlur.value,
+            sigmaX: widget.enterAnimation.backdropBlur.value,
+            sigmaY: widget.enterAnimation.backdropBlur.value,
           ),
           child: Container(
             color: Colors.white.withOpacity(0.0),
@@ -219,28 +217,19 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ))),
-        _isAuthenticating
-            ? Center(
-                child: Container(
-                color: Colors.black54,
-                width: double.infinity,
-                height: double.infinity,
-                child: new Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: new Center(child: new CircularProgressIndicator())),
-              ))
-            : new Container()
       ],
     );
   }
 
   Widget _buildForm(BuildContext context, Widget child) {
     return AnimatedOpacity(
-      opacity: widget.animation.opacity.value,
+      opacity: widget.enterAnimation.opacity.value,
       duration: Duration(milliseconds: 500),
       child: Transform(
-        transform: Matrix4.diagonal3Values(widget.animation.avatarSize.value,
-            widget.animation.avatarSize.value, 1.0),
+        transform: Matrix4.diagonal3Values(
+            widget.enterAnimation.avatarSize.value,
+            widget.enterAnimation.avatarSize.value,
+            1.0),
         alignment: Alignment.center,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -250,13 +239,9 @@ class _LoginPageState extends State<LoginPage> {
               child: logo,
             ),
             SizedBox(
-              height: 150.0,
+              height: 250.0,
             ),
-            _buildLoginWithGoogle(context, child),
-            SizedBox(
-              height: 40.0,
-            ),
-            _buildLoginWithFacebook(context, child)
+            _buildButton(context, child),
           ],
         ),
       ),
@@ -266,10 +251,57 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: widget.animation.controller,
+      animation: widget.enterAnimation.controller,
       builder: _buildAnimation,
     );
   }
+}
+
+class ButtonAnimation {
+  ButtonAnimation(this.controller)
+      : buttonSqueezeanimation = new Tween(
+          begin: 300.0,
+          end: 70.0,
+        ).animate(
+          new CurvedAnimation(
+            parent: controller,
+            curve: new Interval(
+              0.0,
+              0.150,
+            ),
+          ),
+        ),
+        buttomZoomOut = new Tween(
+          begin: 70.0,
+          end: 1000.0,
+        ).animate(
+          new CurvedAnimation(
+            parent: controller,
+            curve: new Interval(
+              0.550,
+              0.999,
+              curve: Curves.bounceOut,
+            ),
+          ),
+        ),
+        containerCircleAnimation = new EdgeInsetsTween(
+          begin: const EdgeInsets.only(bottom: 50.0),
+          end: const EdgeInsets.only(bottom: 0.0),
+        ).animate(
+          new CurvedAnimation(
+            parent: controller,
+            curve: new Interval(
+              0.500,
+              0.800,
+              curve: Curves.ease,
+            ),
+          ),
+        );
+
+  final AnimationController controller;
+  final Animation<EdgeInsets> containerCircleAnimation;
+  final Animation<double> buttonSqueezeanimation;
+  final Animation<double> buttomZoomOut;
 }
 
 class LoginEnterAnimation {

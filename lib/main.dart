@@ -11,8 +11,8 @@ class MyApp extends StatelessWidget {
       title: 'NSALogin',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primaryColor: Colors.blueAccent, fontFamily: 'Nunito'),
-      home: NavigatorPage(),
-     // home: LoginAnimator(),
+      //home: NavigatorPage(),
+     home: LoginAnimator(),
     );
   }
 }
