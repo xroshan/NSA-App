@@ -16,11 +16,11 @@ class NavigatorPage extends StatefulWidget {
 class _NavigatorPageState extends State<NavigatorPage> {
   Widget bodyView = Container();
   String title = 'Dashboard';
-  var isNavigate = true;
+  var isNavigate = 0;
 
   Widget _buildGradientAppBar() {
     return Container(
-      height: 66.0,
+      height: 55.0,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -39,15 +39,17 @@ class _NavigatorPageState extends State<NavigatorPage> {
             color: Colors.white,
             onPressed: () {
               setState(() {
-                isNavigate ? isNavigate = false : isNavigate = true;
+                isNavigate == 0
+                    ? isNavigate = 0
+                    : isNavigate == 1 ? isNavigate = 2 : isNavigate = 1;
               });
             }),
         title: Center(
           child: Text(
-            title,
+            isNavigate == 1 ? 'Dashboard' : title,
             style: TextStyle(
                 color: Colors.white,
-                fontSize: 36.0,
+                fontSize: 30.0,
                 fontWeight: FontWeight.w600),
           ),
         ),
@@ -85,7 +87,7 @@ class _NavigatorPageState extends State<NavigatorPage> {
                   onTap: () {
                     setState(() {
                       title = 'Home';
-                      isNavigate = false;
+                      isNavigate = 2;
                       bodyView = HomePage();
                     });
                   },
@@ -98,7 +100,7 @@ class _NavigatorPageState extends State<NavigatorPage> {
                   onTap: () {
                     setState(() {
                       title = 'Profile';
-                      isNavigate = false;
+                      isNavigate = 2;
                       bodyView = ProfilePage();
                     });
                   },
@@ -111,7 +113,7 @@ class _NavigatorPageState extends State<NavigatorPage> {
                   onTap: () {
                     setState(() {
                       title = 'Messages';
-                      isNavigate = false;
+                      isNavigate = 2;
                       bodyView = MessagesPage();
                     });
                   },
@@ -124,7 +126,7 @@ class _NavigatorPageState extends State<NavigatorPage> {
                   onTap: () {
                     setState(() {
                       title = 'Events';
-                      isNavigate = false;
+                      isNavigate = 2;
                       bodyView = EventsPage();
                     });
                   },
@@ -137,7 +139,7 @@ class _NavigatorPageState extends State<NavigatorPage> {
                   onTap: () {
                     setState(() {
                       title = 'Tasks';
-                      isNavigate = false;
+                      isNavigate = 2;
                       bodyView = TasksPage();
                     });
                   },
@@ -187,13 +189,13 @@ class _NavigatorPageState extends State<NavigatorPage> {
                 fit: StackFit.expand,
                 children: <Widget>[
                   bodyView,
-                  isNavigate
+                  isNavigate != 2
                       ? Frosted(
                           height: double.infinity,
                           width: double.infinity,
                         )
                       : Container(),
-                  isNavigate ? _buildDashboard() : Container(),
+                  isNavigate != 2 ? _buildDashboard() : Container(),
                 ],
               ),
             )

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './utils/login_animator.dart';
 import './pages/navigator.dart';
+import './components/home/detail.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,8 +12,9 @@ class MyApp extends StatelessWidget {
       title: 'NSALogin',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primaryColor: Colors.blueAccent, fontFamily: 'Nunito'),
-      //home: NavigatorPage(),
-     home: LoginAnimator(),
+     // home: NavigatorPage(),
+      //home: LoginAnimator(),
+      home:NewsDetailView(),
     );
   }
 }

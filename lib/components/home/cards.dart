@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../classes/activity.dart';
+import '../../classes/activity.dart';
 
 class NewsCard extends StatefulWidget {
   final News news;
@@ -71,7 +71,7 @@ class _NewsCardState extends State<NewsCard> {
               Padding(
                 padding: EdgeInsets.only(left: 3.0, right: 12.0),
                 child: Text(
-                  widget.news.commentsNumber().toString(),
+                  widget.news.comments.length.toString(),
                   style: posterTextstyle,
                 ),
               ),

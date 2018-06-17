@@ -19,7 +19,7 @@ class _LoginAnimatorState extends State<LoginAnimator>
     _controller.forward();
     _buttonController = AnimationController(
       vsync: this, duration: Duration(
-        milliseconds: 3000
+        milliseconds: 800
       )
     );
   }

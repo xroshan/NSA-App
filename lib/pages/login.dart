@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
   Future<Null> _signIn() async {
-    widget.buttonAnimation.controller.forward();
+    await widget.buttonAnimation.controller.forward();
 
     GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
     GoogleSignInAuthentication gSA = await googleSignInAccount.authentication;
@@ -49,6 +49,7 @@ class _LoginPageState extends State<LoginPage> {
 
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => NavigatorPage()));
+    widget.buttonAnimation.controller.reverse();
   }
 
   Future<Null> _onTimeout() async {
@@ -151,35 +152,32 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildButtonAnimation(BuildContext context, Widget child) {
     return new Padding(
       padding: widget.buttonAnimation.containerCircleAnimation.value,
-      child: new InkWell(
-          onTap: () {
+      child: new FlatButton(
+          onPressed: () {
             _signIn().timeout(Duration(seconds: 25), onTimeout: _onTimeout);
           },
-          child: new Hero(
-              tag: "fade",
-              child: Container(
-                  width: widget.buttonAnimation.buttonSqueezeanimation.value,
-                  height: 55.0,
-                  alignment: FractionalOffset.center,
-                  decoration: new BoxDecoration(
-                    border: Border.all(color: Colors.white, width: 1.5),
-                    color: Colors.blueAccent,
-                    borderRadius: BorderRadius.all(const Radius.circular(30.0)),
-                  ),
-                  child: widget.buttonAnimation.buttonSqueezeanimation.value >
-                          210.0
-                      ? Text(
-                          'LOGIN WITH GOOGLE',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.w700),
-                        )
-                      : new CircularProgressIndicator(
-                          strokeWidth: 2.5,
-                          valueColor:
-                              new AlwaysStoppedAnimation<Color>(Colors.white),
-                        )))),
+          child: Container(
+              width: widget.buttonAnimation.buttonSqueezeanimation.value,
+              height: 55.0,
+              alignment: FractionalOffset.center,
+              decoration: new BoxDecoration(
+                border: Border.all(color: Colors.white, width: 1.5),
+                color: Colors.blueAccent,
+                borderRadius: BorderRadius.all(const Radius.circular(30.0)),
+              ),
+              child: widget.buttonAnimation.buttonSqueezeanimation.value > 210.0
+                  ? Text(
+                      'LOGIN WITH GOOGLE',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w700),
+                    )
+                  : new CircularProgressIndicator(
+                      strokeWidth: 2.5,
+                      valueColor:
+                          new AlwaysStoppedAnimation<Color>(Colors.white),
+                    ))),
     );
   }
 
@@ -267,20 +265,7 @@ class ButtonAnimation {
             parent: controller,
             curve: new Interval(
               0.0,
-              0.150,
-            ),
-          ),
-        ),
-        buttomZoomOut = new Tween(
-          begin: 70.0,
-          end: 1000.0,
-        ).animate(
-          new CurvedAnimation(
-            parent: controller,
-            curve: new Interval(
-              0.550,
-              0.999,
-              curve: Curves.bounceOut,
+              0.200,
             ),
           ),
         ),
@@ -292,7 +277,7 @@ class ButtonAnimation {
             parent: controller,
             curve: new Interval(
               0.500,
-              0.800,
+              1.000,
               curve: Curves.ease,
             ),
           ),
@@ -301,7 +286,6 @@ class ButtonAnimation {
   final AnimationController controller;
   final Animation<EdgeInsets> containerCircleAnimation;
   final Animation<double> buttonSqueezeanimation;
-  final Animation<double> buttomZoomOut;
 }
 
 class LoginEnterAnimation {
