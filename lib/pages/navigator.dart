@@ -8,6 +8,8 @@ import 'events.dart';
 import 'tasks.dart';
 import '../utils/frosted_screen.dart';
 
+import '../components/home/edit.dart';
+
 class NavigatorPage extends StatefulWidget {
   @override
   _NavigatorPageState createState() => _NavigatorPageState();
@@ -53,11 +55,13 @@ class _NavigatorPageState extends State<NavigatorPage> {
                 fontWeight: FontWeight.w600),
           ),
         ),
-        trailing: IconButton(
-          icon: Icon(Icons.add),
-          color: Colors.white,
-          onPressed: () => print('add was pressed'),
-        ),
+        trailing: isNavigate == 2
+            ? IconButton(
+                icon: Icon(Icons.add),
+                color: Colors.white,
+                onPressed: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => EditNews())))
+            : null,
       ),
     );
   }

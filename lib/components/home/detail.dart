@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
-import '../../sample.dart';
 import '../../utils/column_builder.dart';
+import '../../classes/activity.dart';
+import '../../classes/person.dart';
+import 'edit.dart';
 
 class NewsDetailView extends StatefulWidget {
+  final News news;
+  NewsDetailView(this.news);
   @override
   _NewsDetailViewState createState() => _NewsDetailViewState();
 }
@@ -23,7 +27,7 @@ class _NewsDetailViewState extends State<NewsDetailView> {
       child: Column(
         children: <Widget>[
           Text(
-            news.headline,
+            widget.news.headline,
             textAlign: TextAlign.center,
             style: TextStyle(
                 color: Colors.black,
@@ -33,7 +37,8 @@ class _NewsDetailViewState extends State<NewsDetailView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Text('- ' + news.publisher.firstName, style: posterTextstyle),
+              Text('- ' + widget.news.publisher.firstName,
+                  style: posterTextstyle),
               Container(
                 height: 25.0,
                 width: 25.0,
@@ -49,9 +54,9 @@ class _NewsDetailViewState extends State<NewsDetailView> {
                 padding: EdgeInsets.only(left: 10.0, right: 8.0),
                 child: Text(
                   '(' +
-                      news.datetime.month.toString() +
+                      widget.news.datetime.month.toString() +
                       '/' +
-                      news.datetime.day.toString() +
+                      widget.news.datetime.day.toString() +
                       ')',
                   style: posterTextstyle,
                 ),
@@ -74,11 +79,11 @@ class _NewsDetailViewState extends State<NewsDetailView> {
           backgroundImage: AssetImage('assets/login2.webp'),
         ),
         title: Text(
-          news.comments[i].publisher.firstName +
+          widget.news.comments[i].publisher.firstName +
               ' (' +
-              news.datetime.month.toString() +
+              widget.news.datetime.month.toString() +
               '/' +
-              news.datetime.day.toString() +
+              widget.news.datetime.day.toString() +
               ')',
           style: TextStyle(
               fontSize: 15.0,
@@ -86,7 +91,7 @@ class _NewsDetailViewState extends State<NewsDetailView> {
               decoration: TextDecoration.underline),
         ),
         subtitle: Text(
-          news.comments[i].content,
+          widget.news.comments[i].content,
           style: commentTextstyle,
         ),
       ),
@@ -103,7 +108,7 @@ class _NewsDetailViewState extends State<NewsDetailView> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 5.0),
             child: Text(
-              news.content,
+              widget.news.content,
               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
               softWrap: true,
               textAlign: TextAlign.justify,
@@ -130,7 +135,7 @@ class _NewsDetailViewState extends State<NewsDetailView> {
           ColumnBuilder(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            itemCount: news.comments.length,
+            itemCount: widget.news.comments.length,
             itemBuilder: _buildComments,
           ),
         ],
@@ -167,14 +172,19 @@ class _NewsDetailViewState extends State<NewsDetailView> {
       padding: EdgeInsets.all(5.0),
       child: Row(
         children: <Widget>[
-          Icon(
-            Icons.hot_tub,
-            color: Colors.red,
+          new InkWell(
+            onTap: () => setState(() {
+                  widget.news.heatUp();
+                }),
+            child: Icon(
+              Icons.hot_tub,
+              color: Colors.red,
+            ),
           ),
           Padding(
             padding: EdgeInsets.only(left: 3.0),
             child: Text(
-              news.heats.toString(),
+              widget.news.heats.toString(),
               style: posterTextstyle,
             ),
           ),
@@ -190,7 +200,7 @@ class _NewsDetailViewState extends State<NewsDetailView> {
           Padding(
             padding: EdgeInsets.only(left: 3.0, right: 12.0),
             child: Text(
-              news.comments.length.toString(),
+              widget.news.comments.length.toString(),
               style: posterTextstyle,
             ),
           ),
@@ -212,15 +222,28 @@ class _NewsDetailViewState extends State<NewsDetailView> {
                     _isComposing = text.length > 0;
                   });
                 },
-                onSubmitted: _isComposing ? (String text) => print(text) : null,
+                onSubmitted: _isComposing
+                    ? (text) => setState(() {
+                          widget.news.addComment(Messages(
+                              content: _textController.text,
+                              datetime: DateTime.now(),
+                              publisher: Person('apple')));
+                        })
+                    : null,
               ),
             ),
           ),
           Container(
             child: IconButton(
               icon: Icon(Icons.send),
-              onPressed:
-                  _isComposing ? () => print(_textController.text) : null,
+              onPressed: _isComposing
+                  ? () => setState(() {
+                        widget.news.addComment(Messages(
+                            content: _textController.text,
+                            datetime: DateTime.now(),
+                            publisher: Person('apple')));
+                      })
+                  : null,
             ),
           )
         ],
@@ -230,14 +253,6 @@ class _NewsDetailViewState extends State<NewsDetailView> {
 
   @override
   Widget build(BuildContext context) {
-    //Delete this
-    news.heatUp();
-    news.addComment(messages);
-    news.addComment(messages);
-    news.addComment(messages);
-    news.addComment(messages);
-    news.addComment(messages);
-
     return new SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -246,7 +261,49 @@ class _NewsDetailViewState extends State<NewsDetailView> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              _buildImage(),
+              Stack(
+                children: <Widget>[
+                  _buildImage(),
+                  Container(
+                    height: 40.0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.black26,
+                              borderRadius: BorderRadius.circular(3.0)),
+                          child: Row(
+                            children: <Widget>[
+                              IconButton(
+                                icon: Icon(
+                                  Icons.delete,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () => print('Delete'),
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.edit,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            EditNews(widget.news))),
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
               new Expanded(
                   child: new Stack(
                 children: <Widget>[
