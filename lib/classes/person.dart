@@ -1,26 +1,25 @@
-
-
 class Person {
   String firstName;
- /*
- String _middleName;
-  String _lastName;
-  String _profilePicture;
-  String _sex;
-  String _DOB;
-  String _hometown;
-  String _currentAddress;
-  String _emailAdress;
-  String _contactNumber; 
-  */ 
+  String middleName;
+  String lastName;
+  String photoUrl;
+  String backgroundUrl;
+  String email;
+  String sex;
+  String dob;
+  String major;
+  String classification;
+  String hometown;
+  String currentAddress;
+  String contactNumber;
+  String bio;
 
   Person(this.firstName);
-
 }
 
 /*
 class VIP extends Person {
-  String _position;
-  String _clearanceLevel;
+  String position;
+  String clearanceLevel;
 }
 */
