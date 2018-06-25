@@ -1,7 +1,7 @@
 import 'classes/activity.dart';
 import 'classes/person.dart';
 
-Person person = Person('Alfredo');
+Person person = Person(displayName: 'Apple');
 
 News news = News(
     publisher: person,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './utils/login_animator.dart';
+import './pages/login/login.dart';
 import './pages/navigator.dart';
 
 import 'components/profile/edit.dart';
@@ -14,8 +14,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primaryColor: Colors.blueAccent, fontFamily: 'Nunito'),
       // home: NavigatorPage(),
-      //home: LoginAnimator(),
-      home: EditProfile(),
+      home: LoginPage(),
+      //home: EditProfile(),
     );
   }
 }

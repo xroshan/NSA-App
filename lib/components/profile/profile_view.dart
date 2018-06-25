@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+
 import 'edit.dart';
 
+import '../../data/main_data.dart';
+
 class ProfileView extends StatelessWidget {
-  var isMyProfile = false;
+  final index;
+  ProfileView(this.index);
 
   final titleTextstyle = TextStyle(
     fontSize: 18.0,
@@ -23,7 +27,7 @@ class ProfileView extends StatelessWidget {
             decoration: BoxDecoration(
                 color: Colors.black26,
                 borderRadius: BorderRadius.circular(3.0)),
-            child: isMyProfile
+            child: index == -1
                 ? IconButton(
                     icon: Icon(
                       Icons.edit,
@@ -45,7 +49,7 @@ class ProfileView extends StatelessWidget {
     );
   }
 
-  Widget _buildInfo() {
+  Widget _buildInfo(BuildContext context, String title, String value) {
     return new Container(
       padding: EdgeInsets.symmetric(vertical: 3.0),
       child: new Column(
@@ -55,16 +59,16 @@ class ProfileView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                width: 100.0,
+                width: 120.0,
                 child: Text(
-                  'Name:',
+                  title,
                   style: titleTextstyle,
                 ),
               ),
               Expanded(
                 child: Container(
                   child: Text(
-                    'aapleasd;lkfjaslkdfjfasldk;fjasld l;askdjfasldkjfas;ldkfjsalfkjasd;lkfjadsl;kf lsakd;jafasld;kjfas;lkdfjad;lskjfslk;djf sadlkjfas;ldkfjs;aldkfjs;dalkfj',
+                    value,
                     style: titleTextstyle.copyWith(fontWeight: FontWeight.w400),
                   ),
                 ),
@@ -122,28 +126,48 @@ class ProfileView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        _buildInfo(),
-                        _buildInfo(),
-                        _buildInfo(),
-                        _buildInfo(),
-                        _buildInfo(),
-                        _buildInfo(),
-                        _buildInfo(),
-                        _buildInfo(),
-                        _buildInfo(),
-                        _buildInfo(),
-                        _buildInfo(),
-                        _buildInfo(),
-                        _buildInfo(),
-                        _buildInfo(),
-                        _buildInfo(),
-                        _buildInfo(),
-                        _buildInfo(),
-                        _buildInfo(),
-                        _buildInfo(),
-                        _buildInfo(),
-                        _buildInfo(),
-                        _buildInfo(),
+                        _buildInfo(
+                            context,
+                            'Full Name',
+                            index == -1
+                                ? userPerson.displayName
+                                : people[index].displayName),
+                        _buildInfo(context, 'Sex',
+                            index == -1 ? userPerson.sex : people[index].sex),
+                        _buildInfo(context, 'Date of Birth',
+                            index == -1 ? userPerson.dob : people[index].dob),
+                        _buildInfo(
+                            context,
+                            'Hometown',
+                            index == -1
+                                ? userPerson.hometown
+                                : people[index].hometown),
+                        _buildInfo(
+                            context,
+                            'Current Address',
+                            index == -1
+                                ? userPerson.currentAddress
+                                : people[index].currentAddress),
+                        _buildInfo(
+                            context,
+                            'Contact Number',
+                            index == -1
+                                ? userPerson.contactNumber
+                                : people[index].contactNumber),
+                        _buildInfo(
+                            context,
+                            'Major',
+                            index == -1
+                                ? userPerson.major
+                                : people[index].major),
+                        _buildInfo(
+                            context,
+                            'Classification',
+                            index == -1
+                                ? userPerson.classification
+                                : people[index].classification),
+                        _buildInfo(context, 'Bio',
+                            index == -1 ? userPerson.bio : people[index].bio),
                       ],
                     ),
                   )

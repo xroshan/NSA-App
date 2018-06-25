@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:nsa_prototype1/sample.dart';
+import '../components/profile/edit.dart';
 import '../components/profile/profile_view.dart';
 
+import '../data/main_data.dart';
+
 class ProfilePage extends StatefulWidget {
+  ProfilePage();
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -17,7 +20,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildUserList(BuildContext context, int index) {
     return InkWell(
       onTap: () => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => ProfileView())),
+          context, MaterialPageRoute(builder: (context) => ProfileView(index))),
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
         padding: EdgeInsets.all(5.0),
@@ -45,17 +48,24 @@ class _ProfilePageState extends State<ProfilePage> {
               width: 10.0,
             ),
             Text(
-              person.firstName,
+             index == -1 ? userPerson.displayName : people[index].displayName,
               style: nameTextstyle,
             ),
             Expanded(
               child: Container(),
             ),
-            IconButton(
-              color: Colors.white,
-              icon: Icon(Icons.message),
-              onPressed: () => print('message was pressed'),
-            )
+            index == -1
+                ? IconButton(
+                    color: Colors.white,
+                    icon: Icon(Icons.edit),
+                    onPressed: () => Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => EditProfile())),
+                  )
+                : IconButton(
+                    color: Colors.white,
+                    icon: Icon(Icons.message),
+                    onPressed: () => print('message was pressed'),
+                  )
           ],
         ),
       ),
@@ -93,14 +103,14 @@ class _ProfilePageState extends State<ProfilePage> {
               Icons.settings,
               color: Colors.white,
             ),
-            onPressed: () => _selectImage(),
+            onPressed: () => _selectSearchOptions(),
           )
         ],
       ),
     );
   }
 
-  _selectImage() {
+  _selectSearchOptions() {
     return showDialog<Null>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -160,10 +170,10 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           new Expanded(
             child: new Container(
-              child: ListView.builder(
-                itemBuilder: _buildUserList,
-              ),
-            ),
+                child: ListView.builder(
+              itemCount: people.length,
+              itemBuilder: _buildUserList,
+            )),
           )
         ],
       ),

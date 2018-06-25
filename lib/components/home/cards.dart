@@ -83,7 +83,7 @@ class _NewsCardState extends State<NewsCard> {
                   child: Container(),
                 ),
                 Text(
-                  '- ' + widget.news.publisher.firstName,
+                  '- ' + widget.news.publisher.displayName,
                   style: posterTextstyle,
                 ),
                 Container(

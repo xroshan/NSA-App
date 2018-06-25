@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+
 import '../../utils/focus.dart';
+
+import '../../data/main_data.dart';
 
 class EditProfile extends StatefulWidget {
   @override
@@ -16,11 +19,41 @@ class _EditProfileState extends State<EditProfile> {
   static final infoTextstyle =
       titleTextstyle.copyWith(fontWeight: FontWeight.w400);
 
-  final _textControllerName = TextEditingController();
+  final _textControllerDisplayName = TextEditingController();
+  final _textControllerSex = TextEditingController();
+  final _textControllerDOB = TextEditingController();
+  final _textControllerClassification = TextEditingController();
   final _textControllerMajor = TextEditingController();
+  final _textControllerHometown = TextEditingController();
+  final _textControllerCurrentAddress = TextEditingController();
+  final _textControllerContactNumber = TextEditingController();
+  final _textControllerBio = TextEditingController();
 
-  static FocusNode _focusNodeName = FocusNode();
+  static FocusNode _focusNodeDisplayName = FocusNode();
+  static FocusNode _focusNodeSex = FocusNode();
+  static FocusNode _focusNodeDOB = FocusNode();
+  static FocusNode _focusNodeClassification = FocusNode();
   static FocusNode _focusNodeMajor = FocusNode();
+  static FocusNode _focusNodeHometown = FocusNode();
+  static FocusNode _focusNodeCurrentAddress = FocusNode();
+  static FocusNode _focusNodeContactNumber = FocusNode();
+  static FocusNode _focusNodeBio = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    if (userPerson != null) {
+      _textControllerDisplayName.text = userPerson.displayName;
+      _textControllerSex.text = userPerson.sex;
+      _textControllerDOB.text = userPerson.dob;
+      _textControllerHometown.text = userPerson.hometown;
+      _textControllerCurrentAddress.text = userPerson.currentAddress;
+      _textControllerContactNumber.text = userPerson.contactNumber;
+      _textControllerMajor.text = userPerson.major;
+      _textControllerClassification.text = userPerson.classification;
+      _textControllerBio.text = userPerson.bio;
+    }
+  }
 
   Widget _buildButtons(BuildContext context) {
     return Container(
@@ -36,19 +69,21 @@ class _EditProfileState extends State<EditProfile> {
                   color: Colors.black26,
                   borderRadius: BorderRadius.circular(3.0)),
               child: IconButton(
-                icon: Icon(
-                  Icons.save,
-                  color: Colors.white,
-                ),
-                onPressed: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => EditProfile())),
-              ))
+                  icon: Icon(
+                    Icons.save,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    _applyChanges();
+                    Navigator.pop(context);
+                  }))
         ],
       ),
     );
   }
 
-  Widget _buildInfo() {
+  Widget _buildInfo(BuildContext context, String title,
+      TextEditingController textController, FocusNode node) {
     return new Container(
       padding: EdgeInsets.symmetric(vertical: 10.0),
       child: new Column(
@@ -58,24 +93,24 @@ class _EditProfileState extends State<EditProfile> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                width: 100.0,
+                width: 120.0,
                 child: Text(
-                  'Name:',
+                  title,
                   style: titleTextstyle,
                 ),
               ),
               Expanded(
                 child: Container(
                     child: EnsureVisibleWhenFocused(
-                  focusNode: _focusNodeName,
+                  focusNode: node,
                   child: TextField(
-                    focusNode: _focusNodeName,
+                    focusNode: node,
                     style: infoTextstyle,
                     decoration: InputDecoration.collapsed(
                         hintText: 'Edit',
                         hintStyle: infoTextstyle.copyWith(
                             color: Colors.white.withOpacity(0.4))),
-                    controller: _textControllerName,
+                    controller: textController,
                   ),
                 )),
               )
@@ -89,6 +124,20 @@ class _EditProfileState extends State<EditProfile> {
         ],
       ),
     );
+  }
+
+  void _applyChanges() async {
+    userPerson.displayName = _textControllerDisplayName.text;
+    userPerson.sex = _textControllerSex.text;
+    userPerson.dob = _textControllerDOB.text;
+    userPerson.hometown = _textControllerHometown.text;
+    userPerson.currentAddress = _textControllerCurrentAddress.text;
+    userPerson.contactNumber = _textControllerContactNumber.text;
+    userPerson.major = _textControllerMajor.text;
+    userPerson.classification = _textControllerClassification.text;
+    userPerson.bio = _textControllerBio.text;
+
+    await updateUserRecord();
   }
 
   @override
@@ -175,28 +224,36 @@ class _EditProfileState extends State<EditProfile> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            _buildInfo(),
-                            _buildInfo(),
-                            _buildInfo(),
-                            _buildInfo(),
-                            _buildInfo(),
-                            _buildInfo(),
-                            _buildInfo(),
-                            _buildInfo(),
-                            _buildInfo(),
-                            _buildInfo(),
-                            _buildInfo(),
-                            _buildInfo(),
-                            _buildInfo(),
-                            _buildInfo(),
-                            _buildInfo(),
-                            _buildInfo(),
-                            _buildInfo(),
-                            _buildInfo(),
-                            _buildInfo(),
-                            _buildInfo(),
-                            _buildInfo(),
-                            _buildInfo(),
+                            _buildInfo(
+                                context,
+                                'Full Name',
+                                _textControllerDisplayName,
+                                _focusNodeDisplayName),
+                            _buildInfo(context, 'Sex', _textControllerSex,
+                                _focusNodeSex),
+                            _buildInfo(context, 'DOB', _textControllerDOB,
+                                _focusNodeDOB),
+                            _buildInfo(context, 'Hometown',
+                                _textControllerHometown, _focusNodeHometown),
+                            _buildInfo(
+                                context,
+                                'Current Address',
+                                _textControllerCurrentAddress,
+                                _focusNodeCurrentAddress),
+                            _buildInfo(
+                                context,
+                                'Contact Number',
+                                _textControllerContactNumber,
+                                _focusNodeContactNumber),
+                            _buildInfo(context, 'Major', _textControllerMajor,
+                                _focusNodeMajor),
+                            _buildInfo(
+                                context,
+                                'Classification',
+                                _textControllerClassification,
+                                _focusNodeClassification),
+                            _buildInfo(context, 'Bio', _textControllerBio,
+                                _focusNodeBio),
                           ],
                         ),
                       )

@@ -6,9 +6,13 @@ import 'profile.dart';
 import 'messages.dart';
 import 'events.dart';
 import 'tasks.dart';
-import '../utils/frosted_screen.dart';
 
+import '../utils/frosted_screen.dart';
 import '../components/home/edit.dart';
+import '../components/profile/edit.dart';
+
+import '../data/main_data.dart';
+import '../classes/person.dart';
 
 class NavigatorPage extends StatefulWidget {
   @override
@@ -16,9 +20,29 @@ class NavigatorPage extends StatefulWidget {
 }
 
 class _NavigatorPageState extends State<NavigatorPage> {
+  Person person;
   Widget bodyView = Container();
   String title = 'Dashboard';
   var isNavigate = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _manageData(context);
+  }
+
+  void _manageData(BuildContext context) async {
+    var check = await hasUserRecord();
+    if (!check) {
+      await createUserRecord();
+      Navigator.push(
+          context,
+          new MaterialPageRoute(
+            builder: (context) => EditProfile(),
+          ));
+    }
+    await loadPersonData();
+  }
 
   Widget _buildGradientAppBar() {
     return Container(

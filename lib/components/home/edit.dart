@@ -14,8 +14,6 @@ class _EditNewsState extends State<EditNews> {
   final _textControllerHeadline = TextEditingController();
   final _textControllerContent = TextEditingController();
 
-  bool _isComposing = false;
-
   final commentTextstyle = TextStyle(
       fontSize: 18.0, fontWeight: FontWeight.w400, color: Colors.black87);
 
@@ -147,11 +145,6 @@ class _EditNewsState extends State<EditNews> {
                       hintStyle:
                           commentTextstyle.copyWith(color: Colors.black54)),
                   controller: _textControllerHeadline,
-                  onChanged: (String text) {
-                    setState(() {
-                      _isComposing = text.length > 0;
-                    });
-                  },
                 ),
               ),
               Container(
@@ -178,11 +171,6 @@ class _EditNewsState extends State<EditNews> {
                         hintStyle:
                             commentTextstyle.copyWith(color: Colors.black54)),
                     controller: _textControllerContent,
-                    onChanged: (String text) {
-                      setState(() {
-                        _isComposing = text.length > 0;
-                      });
-                    },
                   ),
                 ),
               ),

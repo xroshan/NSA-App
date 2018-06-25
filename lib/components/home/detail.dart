@@ -37,7 +37,7 @@ class _NewsDetailViewState extends State<NewsDetailView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Text('- ' + widget.news.publisher.firstName,
+              Text('- ' + widget.news.publisher.displayName,
                   style: posterTextstyle),
               Container(
                 height: 25.0,
@@ -79,7 +79,7 @@ class _NewsDetailViewState extends State<NewsDetailView> {
           backgroundImage: AssetImage('assets/login2.webp'),
         ),
         title: Text(
-          widget.news.comments[i].publisher.firstName +
+          widget.news.comments[i].publisher.displayName +
               ' (' +
               widget.news.datetime.month.toString() +
               '/' +
@@ -227,7 +227,7 @@ class _NewsDetailViewState extends State<NewsDetailView> {
                           widget.news.addComment(Messages(
                               content: _textController.text,
                               datetime: DateTime.now(),
-                              publisher: Person('apple')));
+                              publisher: Person(displayName: 'Aple')));
                         })
                     : null,
               ),
@@ -241,7 +241,7 @@ class _NewsDetailViewState extends State<NewsDetailView> {
                         widget.news.addComment(Messages(
                             content: _textController.text,
                             datetime: DateTime.now(),
-                            publisher: Person('apple')));
+                            publisher: Person(displayName: 'Aple')));
                       })
                   : null,
             ),
