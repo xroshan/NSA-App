@@ -143,18 +143,17 @@ class _EditProfileState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
     return new SafeArea(
-      child: Scaffold(
-          resizeToAvoidBottomPadding: false,
-          body: new Stack(
-            children: <Widget>[
-              Container(
-                height: double.infinity,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/login2.webp'),
-                        fit: BoxFit.cover)),
-                child: SingleChildScrollView(
+      child: new Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('assets/login2.webp'), fit: BoxFit.cover)),
+        child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: new Stack(
+              children: <Widget>[
+                SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
@@ -164,8 +163,8 @@ class _EditProfileState extends State<EditProfile> {
                         margin: EdgeInsets.only(top: 30.0, bottom: 20.0),
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            border:
-                                Border.all(color: Colors.black45, width: 1.5)),
+                            border: Border.all(
+                                color: Colors.black45, width: 1.5)),
                         child: ClipOval(
                           child: Image.asset('assets/nsa_logo.jpg'),
                         ),
@@ -260,10 +259,10 @@ class _EditProfileState extends State<EditProfile> {
                     ],
                   ),
                 ),
-              ),
-              _buildButtons(context)
-            ],
-          )),
+                _buildButtons(context)
+              ],
+            )),
+      ),
     );
   }
 }
