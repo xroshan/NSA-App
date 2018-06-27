@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 
-import '../../classes/activity.dart';
+import '../../data/main_data.dart';
 
 class EditNews extends StatefulWidget {
-  final News news;
-  EditNews([this.news]);
+  final int index;
+  final bool isPublished;
+  EditNews([this.index, this.isPublished]);
 
   @override
   _EditNewsState createState() => _EditNewsState();
 }
 
 class _EditNewsState extends State<EditNews> {
+  int i;
+  bool isPublished;
+  bool isSaved = false;
+
   final _textControllerHeadline = TextEditingController();
   final _textControllerContent = TextEditingController();
 
@@ -29,10 +34,48 @@ class _EditNewsState extends State<EditNews> {
   @override
   void initState() {
     super.initState();
-    if (widget.news != null) {
-      _textControllerHeadline.text = widget.news.headline;
-      _textControllerContent.text = widget.news.content;
+    if (widget.index != null) {
+      i = widget.index;
+      if (widget.isPublished) {
+        isPublished = widget.isPublished;
+
+        _textControllerHeadline.text = publishedNews[i].headline;
+        _textControllerContent.text = publishedNews[i].content;
+      } else {
+        _textControllerHeadline.text = savedNews[i].headline;
+        _textControllerContent.text = savedNews[i].content;
+      }
+    } else {
+      _create();
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (!isSaved) {
+      _delete();
+    }
+  }
+
+  _delete() async {
+    await deleteUserNews(i);
+  }
+
+  _save() async {
+    isSaved = true;
+    await saveNews(i);
+  }
+
+  _create() async {
+    await createNews();
+    await loadUserNewsData();
+    i = savedNews.length - 1;
+    isPublished = false;
+  }
+
+  _publish() async {
+    await publishNews(i, isPublished);
   }
 
   Widget _buildButtonBar() {
@@ -68,8 +111,8 @@ class _EditNewsState extends State<EditNews> {
             color: Colors.lightBlueAccent,
             onPressed: () {
               setState(() {
-                _textControllerContent.clear();
-                _textControllerHeadline.clear();
+                _save();
+                Navigator.pop(context);
               });
             },
             child: Row(
@@ -88,10 +131,8 @@ class _EditNewsState extends State<EditNews> {
           RaisedButton(
             color: Colors.lightBlueAccent,
             onPressed: () {
-              setState(() {
-                _textControllerContent.clear();
-                _textControllerHeadline.clear();
-              });
+              _publish();
+              Navigator.pop(context);
             },
             child: Row(
               children: <Widget>[
@@ -110,6 +151,7 @@ class _EditNewsState extends State<EditNews> {
       ),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {

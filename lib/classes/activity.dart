@@ -1,51 +1,61 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'person.dart';
-import 'package:meta/meta.dart';
 
 //Base class
 class Activity {
   String content;
   DateTime datetime;
-  Person publisher;
+  String publisherID;
+  String id;
 
-  Activity(
-      {@required this.content,
-      @required this.datetime,
-      @required this.publisher})
-      : assert(content != null),
-        assert(datetime != null),
-        assert(publisher != null);
+  Activity({this.content, this.datetime, this.publisherID, this.id});
 }
 
 //Class for HomePage contents
 class News extends Activity {
-  int heats = 0;
-  String picture;
+  int views = 0;
   String headline;
+  List<String> images;
   List<Messages> comments = [];
 
-  News({
-    @required this.headline,
-    @required content,
-    @required datetime,
-    @required publisher,
-    this.picture,
-  }) : super(content: content, datetime: datetime, publisher: publisher);
+  News(
+      {this.headline,
+      content,
+      datetime,
+      publisherID,
+      id,
+      this.images,
+      this.comments,
+      this.views})
+      : super(
+            content: content,
+            datetime: datetime,
+            publisherID: publisherID,
+            id: id);
 
-  void heatUp() => heats++;
-  void heatDown() => heats--;
-
-  void addComment(Messages text) => comments.add(text);
-  void deleteComment(int index) => comments.removeAt(index);
+  factory News.fromDocument(DocumentSnapshot document) {
+    return News(
+        headline: document['headline'],
+        content: document['content'],
+        publisherID: document['publisherID'],
+        views: document['views'],
+        datetime: document['datetime'],
+        id: document['id']);
+  }
+  factory News.fromUserDocument(DocumentSnapshot document) {
+    return News(
+        headline: document['headline'],
+        content: document['content'],
+        datetime: document['datetime'],
+        id: document['id']);
+  }
 }
 
 //Class for ChatPage contents and comments contents
 class Messages extends Activity {
-  Messages(
-      {@required content,
-      @required datetime,
-      @required publisher,
-      this.receiver})
-      : super(content: content, datetime: datetime, publisher: publisher);
+  Messages({content, datetime, publisherID, this.receiver})
+      : super(content: content, datetime: datetime, publisherID: publisherID);
   List<Person> receiver;
 }
 

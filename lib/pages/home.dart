@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../components/home/cards.dart';
-import '../sample.dart';
+import '../data/main_data.dart';
 
 class HomePage extends StatefulWidget {
   static final title = 'NSA News';
@@ -13,15 +13,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: <Widget>[
-        NewsCard(news),
-        NewsCard(news),
-        NewsCard(news),
-        NewsCard(news),
-        NewsCard(news),
-        NewsCard(news),
-      ],
+    return ListView.builder(
+      itemCount: publishedNews.length,
+      itemBuilder: (_, index) => NewsCard(index),
     );
   }
 }

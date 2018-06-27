@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../utils/focus.dart';
 
@@ -10,6 +11,8 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
+  var pickImageOption = 0; // 1- from camera, 2- from gallery
+
   static final titleTextstyle = TextStyle(
     fontSize: 18.0,
     color: Colors.white70,
@@ -53,6 +56,62 @@ class _EditProfileState extends State<EditProfile> {
       _textControllerClassification.text = userPerson.classification;
       _textControllerBio.text = userPerson.bio;
     }
+  }
+
+  _upload(int option) async {
+    option == 1
+        ? userPerson.backgroundUrl = await uploadPhoto()
+        : userPerson.photoUrl = await uploadPhoto();
+    await updateUserImage();
+    setState(() {
+          
+        });
+  }
+
+  _getImage() async {
+    pickImageOption == 1
+        ? image = await ImagePicker.pickImage(source: ImageSource.camera)
+        : image = await ImagePicker.pickImage(source: ImageSource.gallery);
+  }
+
+  _pickImageOptions() {
+    return showDialog<Null>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+
+      builder: (BuildContext context) {
+        return new SimpleDialog(
+          title: const Text('Pick source'),
+          children: <Widget>[
+            new SimpleDialogOption(
+                child: const Text('Camera'),
+                onPressed: () {
+                  Navigator.pop(context);
+
+                  setState(() {
+                    pickImageOption = 1;
+                  });
+                }),
+            new SimpleDialogOption(
+                child: const Text('Gallery'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+
+                  setState(() {
+                    pickImageOption = 2;
+                  });
+                }),
+            new SimpleDialogOption(
+              child: const Text("Cancel"),
+              onPressed: () {
+                pickImageOption = 0;
+                Navigator.pop(context);
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 
   Widget _buildButtons(BuildContext context) {
@@ -147,8 +206,10 @@ class _EditProfileState extends State<EditProfile> {
         height: double.infinity,
         width: double.infinity,
         decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/login2.webp'), fit: BoxFit.cover)),
+          color: Colors.white,
+          image: DecorationImage(
+              image: NetworkImage(userPerson.backgroundUrl), fit: BoxFit.cover),
+        ),
         child: Scaffold(
             backgroundColor: Colors.transparent,
             body: new Stack(
@@ -163,10 +224,10 @@ class _EditProfileState extends State<EditProfile> {
                         margin: EdgeInsets.only(top: 30.0, bottom: 20.0),
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            border: Border.all(
-                                color: Colors.black45, width: 1.5)),
+                            border:
+                                Border.all(color: Colors.black45, width: 1.5)),
                         child: ClipOval(
-                          child: Image.asset('assets/nsa_logo.jpg'),
+                          child: Image.network(userPerson.photoUrl),
                         ),
                       ),
                       Container(
@@ -178,7 +239,15 @@ class _EditProfileState extends State<EditProfile> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             InkWell(
-                              onTap: () => print('change background'),
+                              onTap: () async {
+                                _pickImageOptions();
+                                if (pickImageOption != 0) {
+                                  await _getImage();
+                                  if (image != null) {
+                                    await _upload(1);
+                                  }
+                                }
+                              },
                               child: ListTile(
                                 leading: Icon(
                                   Icons.photo,
@@ -195,7 +264,15 @@ class _EditProfileState extends State<EditProfile> {
                               height: 1.0,
                             ),
                             InkWell(
-                              onTap: () => print('change profile'),
+                              onTap: () async {
+                                _pickImageOptions();
+                                if (pickImageOption != 0) {
+                                  await _getImage();
+                                  if (image != null) {
+                                    await _upload(2);
+                                  }
+                                }
+                              },
                               child: ListTile(
                                 leading: Icon(
                                   Icons.image,

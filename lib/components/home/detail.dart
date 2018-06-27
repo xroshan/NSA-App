@@ -2,18 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
 import '../../utils/column_builder.dart';
-import '../../classes/activity.dart';
-import '../../classes/person.dart';
+
 import 'edit.dart';
 
+import '../../data/main_data.dart';
+
 class NewsDetailView extends StatefulWidget {
-  final News news;
-  NewsDetailView(this.news);
+  final int index;
+  NewsDetailView(this.index);
   @override
-  _NewsDetailViewState createState() => _NewsDetailViewState();
+  _NewsDetailViewState createState() => _NewsDetailViewState(index);
 }
 
 class _NewsDetailViewState extends State<NewsDetailView> {
+  final int i;
+_NewsDetailViewState(this.i);
+
   final TextEditingController _textController = TextEditingController();
   bool _isComposing = false;
   final commentTextstyle = TextStyle(
@@ -27,7 +31,7 @@ class _NewsDetailViewState extends State<NewsDetailView> {
       child: Column(
         children: <Widget>[
           Text(
-            widget.news.headline,
+            publishedNews[i].headline,
             textAlign: TextAlign.center,
             style: TextStyle(
                 color: Colors.black,
@@ -37,7 +41,7 @@ class _NewsDetailViewState extends State<NewsDetailView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Text('- ' + widget.news.publisher.displayName,
+              Text('- ' + publishedNews[i].publisherID.toString(),
                   style: posterTextstyle),
               Container(
                 height: 25.0,
@@ -54,9 +58,9 @@ class _NewsDetailViewState extends State<NewsDetailView> {
                 padding: EdgeInsets.only(left: 10.0, right: 8.0),
                 child: Text(
                   '(' +
-                      widget.news.datetime.month.toString() +
+                      publishedNews[i].datetime.month.toString() +
                       '/' +
-                      widget.news.datetime.day.toString() +
+                      publishedNews[i].datetime.day.toString() +
                       ')',
                   style: posterTextstyle,
                 ),
@@ -68,7 +72,7 @@ class _NewsDetailViewState extends State<NewsDetailView> {
     );
   }
 
-  Widget _buildComments(BuildContext context, int i) {
+  Widget _buildComments(BuildContext context, int index) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 2.0),
       padding: EdgeInsets.symmetric(vertical: 4.0),
@@ -79,11 +83,11 @@ class _NewsDetailViewState extends State<NewsDetailView> {
           backgroundImage: AssetImage('assets/login2.webp'),
         ),
         title: Text(
-          widget.news.comments[i].publisher.displayName +
+          publishedNews[i].comments[index].publisherID.toString() +
               ' (' +
-              widget.news.datetime.month.toString() +
+              publishedNews[i].datetime.month.toString() +
               '/' +
-              widget.news.datetime.day.toString() +
+              publishedNews[i].datetime.day.toString() +
               ')',
           style: TextStyle(
               fontSize: 15.0,
@@ -91,7 +95,7 @@ class _NewsDetailViewState extends State<NewsDetailView> {
               decoration: TextDecoration.underline),
         ),
         subtitle: Text(
-          widget.news.comments[i].content,
+          publishedNews[i].comments[index].content,
           style: commentTextstyle,
         ),
       ),
@@ -108,7 +112,7 @@ class _NewsDetailViewState extends State<NewsDetailView> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 5.0),
             child: Text(
-              widget.news.content,
+              publishedNews[i].content,
               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
               softWrap: true,
               textAlign: TextAlign.justify,
@@ -132,12 +136,13 @@ class _NewsDetailViewState extends State<NewsDetailView> {
               ),
             ),
           ),
-          ColumnBuilder(
+         /* ColumnBuilder(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            itemCount: widget.news.comments.length,
+            itemCount: publishedNews[i].comments.length,
             itemBuilder: _buildComments,
           ),
+          */
         ],
       ),
     );
@@ -174,7 +179,7 @@ class _NewsDetailViewState extends State<NewsDetailView> {
         children: <Widget>[
           new InkWell(
             onTap: () => setState(() {
-                  widget.news.heatUp();
+                  //publishedNews[i].heatUp();
                 }),
             child: Icon(
               Icons.hot_tub,
@@ -184,7 +189,7 @@ class _NewsDetailViewState extends State<NewsDetailView> {
           Padding(
             padding: EdgeInsets.only(left: 3.0),
             child: Text(
-              widget.news.heats.toString(),
+              publishedNews[i].views.toString(),
               style: posterTextstyle,
             ),
           ),
@@ -200,7 +205,8 @@ class _NewsDetailViewState extends State<NewsDetailView> {
           Padding(
             padding: EdgeInsets.only(left: 3.0, right: 12.0),
             child: Text(
-              widget.news.comments.length.toString(),
+              'asdfs',
+             // publishedNews[i].comments.length.toString(),
               style: posterTextstyle,
             ),
           ),
@@ -224,10 +230,12 @@ class _NewsDetailViewState extends State<NewsDetailView> {
                 },
                 onSubmitted: _isComposing
                     ? (text) => setState(() {
-                          widget.news.addComment(Messages(
+                          /*
+                          publishedNews[i].addComment(Messages(
                               content: _textController.text,
                               datetime: DateTime.now(),
-                              publisher: Person(displayName: 'Aple')));
+                              publisherID: Person(displayName: 'Aple')));
+                              */
                         })
                     : null,
               ),
@@ -238,10 +246,12 @@ class _NewsDetailViewState extends State<NewsDetailView> {
               icon: Icon(Icons.send),
               onPressed: _isComposing
                   ? () => setState(() {
+                    /*
                         widget.news.addComment(Messages(
                             content: _textController.text,
                             datetime: DateTime.now(),
-                            publisher: Person(displayName: 'Aple')));
+                            publisherID: Person(displayName: 'Aple')));
+                            */
                       })
                   : null,
             ),
@@ -294,7 +304,7 @@ class _NewsDetailViewState extends State<NewsDetailView> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            EditNews(widget.news))),
+                                            EditNews(i, true))),
                               )
                             ],
                           ),

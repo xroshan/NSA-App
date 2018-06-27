@@ -40,9 +40,11 @@ class _ProfilePageState extends State<ProfilePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             CircleAvatar(
-              backgroundImage: AssetImage(
-                'assets/login2.webp',
-              ),
+              backgroundImage: NetworkImage(
+                index == -1
+                ? userPerson.photoUrl
+                : people[index].photoUrl
+              )
             ),
             SizedBox(
               width: 10.0,

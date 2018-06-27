@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 
-import '../../classes/activity.dart';
 import './detail.dart';
 
-class NewsCard extends StatefulWidget {
-  final News news;
+import '../../data/main_data.dart';
 
-  NewsCard(this.news);
+class NewsCard extends StatefulWidget {
+  final int index;
+
+  NewsCard(this.index);
 
   @override
-  _NewsCardState createState() => _NewsCardState();
+  _NewsCardState createState() => _NewsCardState(index);
 }
 
 class _NewsCardState extends State<NewsCard> {
+  final int i;
+  _NewsCardState(this.i);
+
   static final headerTextStyle = const TextStyle(
       color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.w600);
 
@@ -24,7 +28,7 @@ class _NewsCardState extends State<NewsCard> {
   Widget _buildNewsCardContent() {
     return new InkWell(
       onTap: () => Navigator.push(context,
-          MaterialPageRoute(builder: (context) => NewsDetailView(widget.news))),
+          MaterialPageRoute(builder: (context) => NewsDetailView(i))),
       child: Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5.0),
@@ -35,14 +39,14 @@ class _NewsCardState extends State<NewsCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              widget.news.headline,
+              publishedNews[i].headline,
               style: headerTextStyle,
             ),
             Expanded(
               child: new Padding(
                 padding: EdgeInsets.symmetric(vertical: 5.0),
                 child: Text(
-                  widget.news.content,
+                  publishedNews[i].content,
                   style: regularTextStyle,
                   softWrap: true,
                   textAlign: TextAlign.justify,
@@ -64,7 +68,7 @@ class _NewsCardState extends State<NewsCard> {
                 Padding(
                   padding: EdgeInsets.only(left: 3.0, right: 12.0),
                   child: Text(
-                    widget.news.heats.toString(),
+                    publishedNews[i].views.toString(),
                     style: posterTextstyle,
                   ),
                 ),
@@ -75,7 +79,8 @@ class _NewsCardState extends State<NewsCard> {
                 Padding(
                   padding: EdgeInsets.only(left: 3.0, right: 12.0),
                   child: Text(
-                    widget.news.comments.length.toString(),
+                    '12',
+                    //publishedNews[i].comments.length.toString(),
                     style: posterTextstyle,
                   ),
                 ),
@@ -83,7 +88,7 @@ class _NewsCardState extends State<NewsCard> {
                   child: Container(),
                 ),
                 Text(
-                  '- ' + widget.news.publisher.displayName,
+                  '- ' + publishedNews[i].publisherID.toString(),
                   style: posterTextstyle,
                 ),
                 Container(
@@ -101,9 +106,9 @@ class _NewsCardState extends State<NewsCard> {
                   padding: EdgeInsets.only(left: 10.0),
                   child: Text(
                     '(' +
-                        widget.news.datetime.month.toString() +
+                        publishedNews[i].datetime.month.toString() +
                         '/' +
-                        widget.news.datetime.day.toString() +
+                        publishedNews[i].datetime.day.toString() +
                         ')',
                     style: posterTextstyle,
                   ),
@@ -119,7 +124,7 @@ class _NewsCardState extends State<NewsCard> {
   Widget _buildNewsThumbnail() {
     return new InkWell(
       onTap: () => Navigator.push(context,
-          MaterialPageRoute(builder: (context) => NewsDetailView(widget.news))),
+          MaterialPageRoute(builder: (context) => NewsDetailView(i))),
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 16.0),
         alignment: FractionalOffset.centerLeft,

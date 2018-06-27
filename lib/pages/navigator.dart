@@ -41,7 +41,10 @@ class _NavigatorPageState extends State<NavigatorPage> {
             builder: (context) => EditProfile(),
           ));
     }
+
     await loadPersonData();
+    await loadUserNewsData();
+    await loadNewsData();
   }
 
   Widget _buildGradientAppBar() {

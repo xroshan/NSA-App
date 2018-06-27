@@ -96,7 +96,9 @@ class ProfileView extends StatelessWidget {
             width: double.infinity,
             decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage('assets/login2.webp'),
+                    image: NetworkImage(index == -1
+                        ? userPerson.backgroundUrl
+                        : people[index].backgroundUrl),
                     fit: BoxFit.cover)),
             child: SingleChildScrollView(
               child: Column(
@@ -110,7 +112,9 @@ class ProfileView extends StatelessWidget {
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.black45, width: 1.5)),
                     child: ClipOval(
-                      child: Image.asset('assets/nsa_logo.jpg'),
+                      child: Image.network(index == -1
+                          ? userPerson.photoUrl
+                          : people[index].photoUrl),
                     ),
                   ),
                   Container(
