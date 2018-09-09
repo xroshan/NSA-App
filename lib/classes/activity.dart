@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'person.dart';
 
-//Base class
+//Base class for all the activities performed by user
 class Activity {
   String content;
   DateTime datetime;
@@ -12,11 +12,11 @@ class Activity {
   Activity({this.content, this.datetime, this.publisherID, this.id});
 }
 
-//Class for HomePage contents
+//Class for HomePage contents.. contains News
 class News extends Activity {
-  int views = 0;
+  int views = 0;                          //tracks no. of views
   String headline;
-  List<String> images;
+  List<String> images;                        //images to be used in news
   List<Messages> comments = [];
 
   News(
@@ -34,7 +34,7 @@ class News extends Activity {
             publisherID: publisherID,
             id: id);
 
-  factory News.fromDocument(DocumentSnapshot document) {
+  factory News.fromDocument(DocumentSnapshot document) {                //create news object from Json document in cloud firestore database
     return News(
         headline: document['headline'],
         content: document['content'],
@@ -43,7 +43,7 @@ class News extends Activity {
         datetime: document['datetime'],
         id: document['id']);
   }
-  factory News.fromUserDocument(DocumentSnapshot document) {
+  factory News.fromUserDocument(DocumentSnapshot document) {                //create news object from Json document in cloud firestore from user document
     return News(
         headline: document['headline'],
         content: document['content'],
@@ -53,12 +53,17 @@ class News extends Activity {
 }
 
 //Class for ChatPage contents and comments contents
-class Messages extends Activity {
+class Messages extends Activity {                 
   Messages({content, datetime, publisherID, this.receiver})
       : super(content: content, datetime: datetime, publisherID: publisherID);
   List<Person> receiver;
 }
 
+
+//TODO after first release
+
+//Class for EventPage contents
 class Events extends Activity {}
 
+//Class for TaskPage contents..
 class Tasks extends Activity {}

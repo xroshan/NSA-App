@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 import './detail.dart';
 
-import '../../data/main_data.dart';
+import '../../data/main_data.dart';               //local database
 
+
+//News Card that goes into HomePage to display news
 class NewsCard extends StatefulWidget {
-  final int index;
+  final int index;                    //index -> index of news in News list
 
   NewsCard(this.index);
 
@@ -14,10 +16,10 @@ class NewsCard extends StatefulWidget {
 }
 
 class _NewsCardState extends State<NewsCard> {
-  final int i;
+  final int i;                                              //i -> index of news in News list
   _NewsCardState(this.i);
 
-  static final headerTextStyle = const TextStyle(
+  static final headerTextStyle = const TextStyle(                                 //some text fonts
       color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.w600);
 
   static final regularTextStyle = const TextStyle(
@@ -25,9 +27,9 @@ class _NewsCardState extends State<NewsCard> {
 
   static final posterTextstyle = regularTextStyle.copyWith(fontSize: 16.0);
 
-  Widget _buildNewsCardContent() {
+  Widget _buildNewsCardContent() {                          //builds the details that goes inside news card
     return new InkWell(
-      onTap: () => Navigator.push(context,
+      onTap: () => Navigator.push(context,                            //navigate to the new detail page
           MaterialPageRoute(builder: (context) => NewsDetailView(i))),
       child: Container(
         decoration: BoxDecoration(
@@ -38,11 +40,11 @@ class _NewsCardState extends State<NewsCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
-              publishedNews[i].headline,
+            Text(                      
+              publishedNews[i].headline,  
               style: headerTextStyle,
             ),
-            Expanded(
+            Expanded(                       //contains news contents
               child: new Padding(
                 padding: EdgeInsets.symmetric(vertical: 5.0),
                 child: Text(
@@ -53,7 +55,7 @@ class _NewsCardState extends State<NewsCard> {
                 ),
               ),
             ),
-            Divider(
+            Divider(          
               color: Colors.white,
               height: 1.0,
             ),
@@ -62,7 +64,7 @@ class _NewsCardState extends State<NewsCard> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 Icon(
-                  Icons.hot_tub,
+                  Icons.hot_tub,            //TODO.. to be replaced with views icon that indicates number of views
                   color: Colors.white,
                 ),
                 Padding(
@@ -80,7 +82,7 @@ class _NewsCardState extends State<NewsCard> {
                   padding: EdgeInsets.only(left: 3.0, right: 12.0),
                   child: Text(
                     '12',
-                    //publishedNews[i].comments.length.toString(),
+                    //publishedNews[i].comments.length.toString(),  //no. of comments
                     style: posterTextstyle,
                   ),
                 ),
@@ -88,7 +90,7 @@ class _NewsCardState extends State<NewsCard> {
                   child: Container(),
                 ),
                 Text(
-                  '- ' + publishedNews[i].publisherID.toString(),
+                  '- ' + publishedNews[i].publisherID.toString(),                       //publisher information
                   style: posterTextstyle,
                 ),
                 Container(
@@ -97,7 +99,7 @@ class _NewsCardState extends State<NewsCard> {
                   margin: EdgeInsets.only(left: 3.0),
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: AssetImage('assets/login2.webp'),
+                          image: AssetImage('assets/login2.webp'),      //TODO.. to be used from cloud firestore database
                           fit: BoxFit.cover),
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.white, width: 1.0)),
@@ -106,7 +108,7 @@ class _NewsCardState extends State<NewsCard> {
                   padding: EdgeInsets.only(left: 10.0),
                   child: Text(
                     '(' +
-                        publishedNews[i].datetime.month.toString() +
+                        publishedNews[i].datetime.month.toString() +              //published date
                         '/' +
                         publishedNews[i].datetime.day.toString() +
                         ')',
@@ -121,17 +123,17 @@ class _NewsCardState extends State<NewsCard> {
     );
   }
 
-  Widget _buildNewsThumbnail() {
+  Widget _buildNewsThumbnail() {          //builds the thumbnail that potrays news picture
     return new InkWell(
-      onTap: () => Navigator.push(context,
+      onTap: () => Navigator.push(context,                                //on pressing thumbnail, page navigates News detail
           MaterialPageRoute(builder: (context) => NewsDetailView(i))),
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 16.0),
         alignment: FractionalOffset.centerLeft,
-        child: ClipRRect(
+        child: ClipRRect(                                             //rectangular frame with border radius
           borderRadius: BorderRadius.circular(10.0),
           child: Image(
-            image: AssetImage('assets/login2.webp'), //TODO
+            image: AssetImage('assets/login2.webp'),    //TODO.. image needs to be loaded from database
             fit: BoxFit.cover,
             height: 110.0,
             width: 110.0,
@@ -141,17 +143,17 @@ class _NewsCardState extends State<NewsCard> {
     );
   }
 
-  Widget _buildNewsCard() {
+  Widget _buildNewsCard() {     //builds the news card
     return Container(
       height: 150.0,
       margin: EdgeInsets.only(left: 46.0),
-      decoration: BoxDecoration(
+      decoration: BoxDecoration(            //provides shape and border radius and shadow
           color: Color(0xFF333366),
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(8.0),
           boxShadow: <BoxShadow>[
             BoxShadow(
-                color: Colors.black12,
+                color: Colors.black12,           //black with 12% opacity
                 blurRadius: 10.0,
                 offset: Offset(0.0, 10.0))
           ]),
@@ -160,14 +162,14 @@ class _NewsCardState extends State<NewsCard> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {          //main widget builder.. 
     return Container(
       height: 150.0,
       margin: const EdgeInsets.symmetric(
         vertical: 10.0,
         horizontal: 10.0,
       ),
-      child: Stack(
+      child: Stack(                               //stack the thumbnail over the news card 
         children: <Widget>[_buildNewsCard(), _buildNewsThumbnail()],
       ),
     );

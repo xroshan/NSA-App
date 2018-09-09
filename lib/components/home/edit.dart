@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../data/main_data.dart';
+import '../../data/main_data.dart';             //local database
 
 class EditNews extends StatefulWidget {
   final int index;
@@ -13,13 +13,13 @@ class EditNews extends StatefulWidget {
 
 class _EditNewsState extends State<EditNews> {
   int i;
-  bool isPublished;
+  bool isPublished;                   
   bool isSaved = false;
 
   final _textControllerHeadline = TextEditingController();
   final _textControllerContent = TextEditingController();
 
-  final commentTextstyle = TextStyle(
+  final commentTextstyle = TextStyle(                                           //some text fonts
       fontSize: 18.0, fontWeight: FontWeight.w400, color: Colors.black87);
 
   final titleTextstyle = TextStyle(
@@ -32,7 +32,7 @@ class _EditNewsState extends State<EditNews> {
       fontSize: 16.0, fontWeight: FontWeight.w500, color: Colors.black87);
 
   @override
-  void initState() {
+  void initState() {                            //override initState() to display the news contents if edited the existing news..
     super.initState();
     if (widget.index != null) {
       i = widget.index;
@@ -52,33 +52,33 @@ class _EditNewsState extends State<EditNews> {
 
   @override
   void dispose() {
-    super.dispose();
+    super.dispose();                            //override dispose() to delete the unsaved news.
     if (!isSaved) {
       _delete();
     }
   }
 
-  _delete() async {
+  _delete() async {                           //delete news
     await deleteUserNews(i);
   }
 
-  _save() async {
+  _save() async {                     //save news to remote database
     isSaved = true;
-    await saveNews(i);
+    await saveNews(i);                        //call to local database 
   }
 
-  _create() async {
+  _create() async {                               //create new news         
     await createNews();
     await loadUserNewsData();
     i = savedNews.length - 1;
     isPublished = false;
   }
 
-  _publish() async {
+  _publish() async {                                  //publish news when ready
     await publishNews(i, isPublished);
   }
 
-  Widget _buildButtonBar() {
+  Widget _buildButtonBar() {                              //goes to bottom of screen.. save and publish buttons..
     return Container(
       padding: EdgeInsets.only(top: 5.0),
       height: 40.0,
@@ -90,7 +90,7 @@ class _EditNewsState extends State<EditNews> {
             color: Colors.lightBlueAccent,
             onPressed: () {
               setState(() {
-                _textControllerContent.clear();
+                _textControllerContent.clear();                       //clear buttons clear headline and contents.. 
                 _textControllerHeadline.clear();
               });
             },
@@ -111,7 +111,7 @@ class _EditNewsState extends State<EditNews> {
             color: Colors.lightBlueAccent,
             onPressed: () {
               setState(() {
-                _save();
+                _save();                                    //save news in cloud firestore database.. user database
                 Navigator.pop(context);
               });
             },
@@ -131,7 +131,7 @@ class _EditNewsState extends State<EditNews> {
           RaisedButton(
             color: Colors.lightBlueAccent,
             onPressed: () {
-              _publish();
+              _publish();                                           //publish to public world.. displayed in homepage..TODO
               Navigator.pop(context);
             },
             child: Row(
@@ -154,7 +154,7 @@ class _EditNewsState extends State<EditNews> {
 
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {              //main builder
     return new SafeArea(
       child: new Scaffold(
         resizeToAvoidBottomPadding: false,
@@ -186,7 +186,7 @@ class _EditNewsState extends State<EditNews> {
                       hintText: 'Give a headline',
                       hintStyle:
                           commentTextstyle.copyWith(color: Colors.black54)),
-                  controller: _textControllerHeadline,
+                  controller: _textControllerHeadline,                            //user text field to input headline 
                 ),
               ),
               Container(
@@ -212,14 +212,14 @@ class _EditNewsState extends State<EditNews> {
                         hintText: 'Write your content',
                         hintStyle:
                             commentTextstyle.copyWith(color: Colors.black54)),
-                    controller: _textControllerContent,
+                    controller: _textControllerContent,                 //user text field to input news contents
                   ),
                 ),
               ),
               Container(
                 padding: EdgeInsets.only(top: 5.0),
                 child: Text(
-                  'Images:',
+                  'Images:',                                //TODO.. upload images needs to be done.. max up to 8 images..
                   style: titleTextstyle,
                 ),
               ),
@@ -227,7 +227,7 @@ class _EditNewsState extends State<EditNews> {
                 height: 100.0,
                 color: Colors.red,
               ),
-              _buildButtonBar()
+              _buildButtonBar()                                     //goes to the bottom of screen.. contains save, publish buttons
             ],
           ),
         ),

@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 
-class Person {
+//User Class.. 
+class Person {                          //most of these info are displayed on ProfilePage
   String displayName;
   String id;
-  String photoUrl;
+  String photoUrl;                  
   String backgroundUrl;
   String email;
   String sex;
@@ -31,7 +32,7 @@ class Person {
       this.contactNumber = '',
       this.bio = ''});
 
-  factory Person.fromDocument(DocumentSnapshot document) {
+  factory Person.fromDocument(DocumentSnapshot document) {            //create person object from cloud firestore database
     return Person(
         displayName: document['displayName'],
         id: document['id'],
@@ -49,7 +50,9 @@ class Person {
   }
 }
 
-/*
+
+
+/*    waiting to be removed.. forgot specifically why i needed it
  if (widget.user != null) {
       ref.document(widget.user.id).setData({
         "id": widget.user.id,
@@ -68,6 +71,8 @@ class Person {
 
     */
 
+
+//Class for Board members of the organization.. maybe used in next release.. no use for now.
 class VIP extends Person {
   String position;
   String clearanceLevel;

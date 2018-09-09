@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';                //library to implement swiping of multiple images of news
 
-import '../../utils/column_builder.dart';
+import '../../utils/column_builder.dart';                       //local library to build comment section.. unused currently..
 
 import 'edit.dart';
 
-import '../../data/main_data.dart';
+import '../../data/main_data.dart';     //local database
 
 class NewsDetailView extends StatefulWidget {
   final int index;
@@ -25,7 +25,7 @@ _NewsDetailViewState(this.i);
   final posterTextstyle = TextStyle(
       fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.black54);
 
-  Widget _buildTitle() {
+  Widget _buildTitle() {                              //news headline
     return Container(
       padding: EdgeInsets.only(top: 5.0),
       child: Column(
@@ -41,7 +41,7 @@ _NewsDetailViewState(this.i);
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Text('- ' + publishedNews[i].publisherID.toString(),
+              Text('- ' + publishedNews[i].publisherID.toString(),                    //publisher info
                   style: posterTextstyle),
               Container(
                 height: 25.0,
@@ -49,7 +49,7 @@ _NewsDetailViewState(this.i);
                 margin: EdgeInsets.only(left: 3.0),
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage('assets/login2.webp'),
+                        image: AssetImage('assets/login2.webp'),          //TODO.. needs to be acceseed from cloud firestore
                         fit: BoxFit.cover),
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.black, width: 1.0)),
@@ -58,7 +58,7 @@ _NewsDetailViewState(this.i);
                 padding: EdgeInsets.only(left: 10.0, right: 8.0),
                 child: Text(
                   '(' +
-                      publishedNews[i].datetime.month.toString() +
+                      publishedNews[i].datetime.month.toString() +                  //publication date
                       '/' +
                       publishedNews[i].datetime.day.toString() +
                       ')',
@@ -72,7 +72,7 @@ _NewsDetailViewState(this.i);
     );
   }
 
-  Widget _buildComments(BuildContext context, int index) {
+  Widget _buildComments(BuildContext context, int index) {                    //builds comment section below contents
     return Container(
       margin: EdgeInsets.symmetric(vertical: 2.0),
       padding: EdgeInsets.symmetric(vertical: 4.0),
@@ -80,10 +80,10 @@ _NewsDetailViewState(this.i);
           borderRadius: BorderRadius.circular(4.0), color: Colors.black12),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundImage: AssetImage('assets/login2.webp'),
+          backgroundImage: AssetImage('assets/login2.webp'),                      //commenting user profile image
         ),
         title: Text(
-          publishedNews[i].comments[index].publisherID.toString() +
+          publishedNews[i].comments[index].publisherID.toString() +                       //commenting user info and date of comment
               ' (' +
               publishedNews[i].datetime.month.toString() +
               '/' +
@@ -102,7 +102,7 @@ _NewsDetailViewState(this.i);
     );
   }
 
-  Widget _buildContent(BuildContext context) {
+  Widget _buildContent(BuildContext context) {                //builds the whole content of the news
     return Container(
       padding: EdgeInsets.all(12.0),
       child: Column(
@@ -112,7 +112,7 @@ _NewsDetailViewState(this.i);
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 5.0),
             child: Text(
-              publishedNews[i].content,
+              publishedNews[i].content,                                       //news content
               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
               softWrap: true,
               textAlign: TextAlign.justify,
@@ -136,7 +136,7 @@ _NewsDetailViewState(this.i);
               ),
             ),
           ),
-         /* ColumnBuilder(
+         /* ColumnBuilder(                                                    //TODO... show comments..
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             itemCount: publishedNews[i].comments.length,
@@ -148,26 +148,26 @@ _NewsDetailViewState(this.i);
     );
   }
 
-  Widget _buildImage() {
+  Widget _buildImage() {                        //builds the top of the screen containing images of the news.. contains image swiper to display mulitple images
     return new Container(
-      height: MediaQuery.of(context).size.height * 0.35,
+      height: MediaQuery.of(context).size.height * 0.35,                //gives the height of the screen
       color: Colors.black,
       child: Swiper(
         itemBuilder: (BuildContext context, int index) {
           return Image(
-            image: AssetImage('assets/login2.webp'),
+            image: AssetImage('assets/login2.webp'),      //TODO.. needs to be accessed from cloud firestore database
             fit: BoxFit.contain,
           );
         },
         loop: false,
-        itemCount: 3,
-        pagination: new SwiperPagination(),
+        itemCount: 3,                                 //TODO.. max up to 8 images..
+        pagination: new SwiperPagination(),                               
         control: new SwiperControl(iconNext: null, iconPrevious: null),
       ),
     );
   }
 
-  Widget _buildBottomBar() {
+  Widget _buildBottomBar() {                      //displayed at the bottom of the screen .. comment bar
     return Container(
       width: double.infinity,
       height: 50.0,
@@ -179,7 +179,7 @@ _NewsDetailViewState(this.i);
         children: <Widget>[
           new InkWell(
             onTap: () => setState(() {
-                  //publishedNews[i].heatUp();
+                  //publishedNews[i].heatUp();                    //TODO..remove heat up feature.. instead add no. of views
                 }),
             child: Icon(
               Icons.hot_tub,
@@ -205,8 +205,8 @@ _NewsDetailViewState(this.i);
           Padding(
             padding: EdgeInsets.only(left: 3.0, right: 12.0),
             child: Text(
-              'asdfs',
-             // publishedNews[i].comments.length.toString(),
+              '15',
+             // publishedNews[i].comments.length.toString(),      //no. of comments
               style: posterTextstyle,
             ),
           ),
@@ -220,16 +220,16 @@ _NewsDetailViewState(this.i);
               child: TextField(
                 maxLines: null,
                 decoration: InputDecoration.collapsed(
-                  hintText: 'Put your thoughts',
+                  hintText: 'Put your thoughts',                        
                 ),
                 controller: _textController,
                 onChanged: (String text) {
                   setState(() {
-                    _isComposing = text.length > 0;
+                    _isComposing = text.length > 0;                   //check if user has typed something
                   });
                 },
                 onSubmitted: _isComposing
-                    ? (text) => setState(() {
+                    ? (text) => setState(() {                       //TODO.. needs to be submitted to cloud firestore database
                           /*
                           publishedNews[i].addComment(Messages(
                               content: _textController.text,
@@ -262,7 +262,7 @@ _NewsDetailViewState(this.i);
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {            //main builder
     return new SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -273,7 +273,7 @@ _NewsDetailViewState(this.i);
             children: <Widget>[
               Stack(
                 children: <Widget>[
-                  _buildImage(),
+                  _buildImage(),                          //image is displayed at the begining..
                   Container(
                     height: 40.0,
                     child: Row(
@@ -293,11 +293,11 @@ _NewsDetailViewState(this.i);
                                   Icons.delete,
                                   color: Colors.white,
                                 ),
-                                onPressed: () => print('Delete'),
+                                onPressed: () => print('Delete'),                     //detele news button. can be accessed only by publisher.. TODO
                               ),
                               IconButton(
                                 icon: Icon(
-                                  Icons.edit,
+                                  Icons.edit,                                         //edit news button. can be accessed only by publisher.. TODO
                                   color: Colors.white,
                                 ),
                                 onPressed: () => Navigator.push(
@@ -325,7 +325,7 @@ _NewsDetailViewState(this.i);
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
-                          _buildTitle(),
+                          _buildTitle(),                                          //News headline
                           _buildContent(context),
                         ],
                       ),
@@ -345,7 +345,7 @@ _NewsDetailViewState(this.i);
                   ),
                 ],
               )),
-              _buildBottomBar()
+              _buildBottomBar()                                             //comment bar                                         
             ],
           ),
         ),
