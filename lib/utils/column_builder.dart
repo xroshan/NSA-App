@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//A library used for listing comments in news.. Not in use right now.. 
 class ColumnBuilder extends StatelessWidget {
 	final IndexedWidgetBuilder itemBuilder;
 	final MainAxisAlignment mainAxisAlignment;

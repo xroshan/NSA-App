@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//TO be build in next release
 class EventsPage extends StatefulWidget {
   @override
   _EventsPageState createState() => _EventsPageState();

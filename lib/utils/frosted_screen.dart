@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'dart:ui';
 
+//A very useful library for showing frosted screen.. used for freezing the background activity..
 class Frosted extends StatelessWidget {
 
   final double width;
@@ -15,10 +16,10 @@ class Frosted extends StatelessWidget {
       height: height,
       width: width, 
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 7.0, sigmaY: 7.0),
+        filter: ImageFilter.blur(sigmaX: 7.0, sigmaY: 7.0),                 //uses blur
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.grey.shade200.withOpacity(0.5)
+            color: Colors.grey.shade200.withOpacity(0.5)                    //uses grey shade with some opacity
           ),
         ),
       ),

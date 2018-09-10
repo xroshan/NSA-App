@@ -1,6 +1,8 @@
 import 'classes/activity.dart';
 import 'classes/person.dart';
 
+//local database for test
+
 Person person = Person(displayName: 'Apple');
 
 News news = News(

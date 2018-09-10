@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:image_picker/image_picker.dart';            //library for uplaoding images
 
-import '../../utils/focus.dart';
+import '../../utils/focus.dart';                          //local library used to focus on screen while typing.. TODO.. 
 
-import '../../data/main_data.dart';
+import '../../data/main_data.dart';                         //local database
 
 class EditProfile extends StatefulWidget {
   @override
@@ -22,7 +22,7 @@ class _EditProfileState extends State<EditProfile> {
   static final infoTextstyle =
       titleTextstyle.copyWith(fontWeight: FontWeight.w400);
 
-  final _textControllerDisplayName = TextEditingController();
+  final _textControllerDisplayName = TextEditingController();                         //some controller for editing texts
   final _textControllerSex = TextEditingController();
   final _textControllerDOB = TextEditingController();
   final _textControllerClassification = TextEditingController();
@@ -43,7 +43,7 @@ class _EditProfileState extends State<EditProfile> {
   static FocusNode _focusNodeBio = FocusNode();
 
   @override
-  void initState() {
+  void initState() {                                              //initialize the state with user data if exists
     super.initState();
     if (userPerson != null) {
       _textControllerDisplayName.text = userPerson.displayName;
@@ -58,23 +58,23 @@ class _EditProfileState extends State<EditProfile> {
     }
   }
 
-  _upload(int option) async {
+  _upload(int option) async {                                           //upload the images, option - 1 to upload background image, 2 to upload personal image
     option == 1
         ? userPerson.backgroundUrl = await uploadPhoto()
         : userPerson.photoUrl = await uploadPhoto();
-    await updateUserImage();
+    await updateUserImage();                                    //upload into remote database and refresh
     setState(() {
           
         });
   }
 
-  _getImage() async {
+  _getImage() async {                                                   //get the image from local machine
     pickImageOption == 1
         ? image = await ImagePicker.pickImage(source: ImageSource.camera)
         : image = await ImagePicker.pickImage(source: ImageSource.gallery);
   }
 
-  _pickImageOptions() {
+  _pickImageOptions() {                                         //shows options to user if they want to upload from camera or gallery
     return showDialog<Null>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -84,7 +84,7 @@ class _EditProfileState extends State<EditProfile> {
           title: const Text('Pick source'),
           children: <Widget>[
             new SimpleDialogOption(
-                child: const Text('Camera'),
+                child: const Text('Camera'),                            //upload from camera
                 onPressed: () {
                   Navigator.pop(context);
 
@@ -93,7 +93,7 @@ class _EditProfileState extends State<EditProfile> {
                   });
                 }),
             new SimpleDialogOption(
-                child: const Text('Gallery'),
+                child: const Text('Gallery'),                        //upload from gallery
                 onPressed: () {
                   Navigator.of(context).pop();
 
@@ -102,7 +102,7 @@ class _EditProfileState extends State<EditProfile> {
                   });
                 }),
             new SimpleDialogOption(
-              child: const Text("Cancel"),
+              child: const Text("Cancel"),                      //cancel
               onPressed: () {
                 pickImageOption = 0;
                 Navigator.pop(context);
@@ -114,7 +114,7 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  Widget _buildButtons(BuildContext context) {
+  Widget _buildButtons(BuildContext context) {                          //build save buttons
     return Container(
       height: 40.0,
       child: Row(
@@ -133,7 +133,7 @@ class _EditProfileState extends State<EditProfile> {
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    _applyChanges();
+                    _applyChanges();                                //apply changes to the edited person and go back
                     Navigator.pop(context);
                   }))
         ],
@@ -160,7 +160,7 @@ class _EditProfileState extends State<EditProfile> {
               ),
               Expanded(
                 child: Container(
-                    child: EnsureVisibleWhenFocused(
+                    child: EnsureVisibleWhenFocused(                        //make sure the focused portion is visible when keyboard screen appears.
                   focusNode: node,
                   child: TextField(
                     focusNode: node,
@@ -185,7 +185,7 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  void _applyChanges() async {
+  void _applyChanges() async {                                        //apply changes to local database and then update in remote database
     userPerson.displayName = _textControllerDisplayName.text;
     userPerson.sex = _textControllerSex.text;
     userPerson.dob = _textControllerDOB.text;
@@ -196,11 +196,11 @@ class _EditProfileState extends State<EditProfile> {
     userPerson.classification = _textControllerClassification.text;
     userPerson.bio = _textControllerBio.text;
 
-    await updateUserRecord();
+    await updateUserRecord();                               //update in remote database
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {                                    //main widget builder
     return new SafeArea(
       child: new Container(
         height: double.infinity,
@@ -240,11 +240,11 @@ class _EditProfileState extends State<EditProfile> {
                           children: <Widget>[
                             InkWell(
                               onTap: () async {
-                                _pickImageOptions();
+                                _pickImageOptions();                //pick image option for uploading either from gallery or camera
                                 if (pickImageOption != 0) {
                                   await _getImage();
                                   if (image != null) {
-                                    await _upload(1);
+                                    await _upload(1);           //upload background image
                                   }
                                 }
                               },
@@ -265,11 +265,11 @@ class _EditProfileState extends State<EditProfile> {
                             ),
                             InkWell(
                               onTap: () async {
-                                _pickImageOptions();
+                                _pickImageOptions();                    //pick image for uploading
                                 if (pickImageOption != 0) {
                                   await _getImage();
                                   if (image != null) {
-                                    await _upload(2);
+                                    await _upload(2);                   //upload perosonal image
                                   }
                                 }
                               },
@@ -300,7 +300,7 @@ class _EditProfileState extends State<EditProfile> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            _buildInfo(
+                            _buildInfo(                           //builds the column for displaying various user information
                                 context,
                                 'Full Name',
                                 _textControllerDisplayName,
@@ -336,7 +336,7 @@ class _EditProfileState extends State<EditProfile> {
                     ],
                   ),
                 ),
-                _buildButtons(context)
+                _buildButtons(context)                              //save buttons
               ],
             )),
       ),

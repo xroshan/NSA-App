@@ -6,6 +6,14 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'dart:async';
 
+
+
+
+
+
+
+//TODO.. this was all for test.. needs to be build from begining...
+
 class ChatPage extends StatefulWidget {
   final FirebaseAuth _auth;
   final GoogleSignIn googleSignIn;
